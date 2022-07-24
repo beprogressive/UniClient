@@ -1,8 +1,8 @@
 package beprogressive.uniclient.data.remote.github
 
 import beprogressive.common.model.UserItem
+import beprogressive.uniclient.data.ClientUser
 import beprogressive.uniclient.data.remote.RemoteDataSource
-import beprogressive.uniclient.data.remote.github.pojo.GitHubAuthResponse
 import beprogressive.uniclient.data.remote.github.pojo.GitHubUserItem
 import beprogressive.uniclient.data.remote.github.retrofit.GHRetrofitServices
 import beprogressive.uniclient.log
@@ -67,40 +67,36 @@ object GitHubDataSource : RemoteDataSource {
         awaitClose { userListCall.cancel() }
     }
 
-    override suspend fun auth(challengeResponse: String) {
+    override fun auth(challengeResponse: String): String? {
 
         val code = challengeResponse.replace("code=", "")
 
         log("auth code: $code")
 
-        val callback = object : retrofit2.Callback<GitHubAuthResponse> {
-            override fun onResponse(
-                call: Call<GitHubAuthResponse>,
-                response: retrofit2.Response<GitHubAuthResponse>
-            ) {
-                val authResponse = response.body() ?: return
-                log("onResponse accessToken: " + authResponse.accessToken)
-            }
-
-            override fun onFailure(call: Call<GitHubAuthResponse>, t: Throwable) {
-                t.printStackTrace()
-            }
-        }
-
         val gson = GsonBuilder()
             .setLenient()
             .create()
 
-        val retrofitService: GHRetrofitServices = Retrofit.Builder()
+        val authService: GHRetrofitServices = Retrofit.Builder()
             .baseUrl(AUTH_URL)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build().create(GHRetrofitServices::class.java)
 
-        retrofitService.getAccessToken(
+        val authCall = authService.getAccessToken(
             clientId = getClientId(),
             clientSecret = getClientSecret(),
             code = code,
             redirectUri = REDIRECT_URI
-        ).enqueue(callback)
+        )
+
+        return authCall.execute().body()?.accessToken
+    }
+
+    override fun getClientUser(token: String): ClientUser? {
+        val response = retrofitService.getClientUser("token $token").execute()
+        response.body()?.let {
+            return ClientUser.setUser(it.login, token, UserItem.ApiKey.GitHub)
+        }
+        return null
     }
 }

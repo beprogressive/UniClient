@@ -1,12 +1,11 @@
 package beprogressive.uniclient.data.remote.github.retrofit
 
 import beprogressive.uniclient.data.remote.github.pojo.GitHubAuthResponse
+import beprogressive.uniclient.data.remote.github.pojo.GitHubClientUser
+import beprogressive.uniclient.data.remote.github.pojo.GitHubClientUserResponse
 import beprogressive.uniclient.data.remote.github.pojo.GitHubUserItem
 import retrofit2.Call
-import retrofit2.http.GET
-import retrofit2.http.Headers
-import retrofit2.http.POST
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface GHRetrofitServices {
 
@@ -21,4 +20,8 @@ interface GHRetrofitServices {
 
     @GET("users")
     fun getUserList(): Call<List<GitHubUserItem>>
+
+    @Headers("Accept: application/json")
+    @GET("user")
+    fun getClientUser(@Header("Authorization") token: String): Call<GitHubClientUser>
 }

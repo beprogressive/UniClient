@@ -2,20 +2,18 @@ package beprogressive.uniclient.ui
 
 import android.net.Uri
 import androidx.lifecycle.*
-import beprogressive.uniclient.data.UsersRepository
+import beprogressive.uniclient.data.ClientUser
+import beprogressive.uniclient.data.MainRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel @Inject constructor(private val repository: UsersRepository, state: SavedStateHandle) :
+class MainViewModel @Inject constructor(private val repository: MainRepository, state: SavedStateHandle) :
     ViewModel() {
-    private val _accessToken = MutableLiveData<String>()
-    val accessToken: LiveData<String> = _accessToken
+    private val _clientUser = MutableLiveData<ClientUser>()
+    val clientUser: LiveData<ClientUser> = _clientUser
 
     sealed class Event {
         //        object NavigateToSettings: Event()
@@ -34,9 +32,9 @@ class MainViewModel @Inject constructor(private val repository: UsersRepository,
 
     private fun getSavedAccessToken() {
         viewModelScope.launch {
-//            repository.getSavedAccessToken().collectLatest {
-//                _accessToken.value = it
-//            }
+            repository.getSavedClientUser().collectLatest {
+                _clientUser.value = it
+            }
         }
     }
 

@@ -5,4 +5,6 @@ option java_multiple_files = true;
 
 message ProtoSettings {
   string access_token = 1;
+  string user_name = 2;
+  string api_type = 3;
 }

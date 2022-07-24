@@ -12,7 +12,5 @@ interface UsersRepository {
 
     fun observeUser(userId: String): LiveData<UserItem?>
 
-    suspend fun auth(response: Uri)
-
     suspend fun switchUserFavorite(userItem: UserItem)
 }

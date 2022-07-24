@@ -1,6 +1,7 @@
 package beprogressive.uniclient.data.remote.dailymotion
 
 import beprogressive.common.model.UserItem
+import beprogressive.uniclient.data.ClientUser
 import beprogressive.uniclient.data.remote.RemoteDataSource
 import beprogressive.uniclient.data.remote.dailymotion.pojo.DailyMotionUsersResponse
 import beprogressive.uniclient.data.remote.dailymotion.retrofit.DMRetrofitServices
@@ -51,7 +52,13 @@ object DailyMotionDataSource : RemoteDataSource {
         awaitClose { userListCall.cancel() }
     }
 
-    override suspend fun auth(challengeResponse: String) {
-
+    override fun auth(challengeResponse: String): String? {
+        return null
     }
+
+    override fun getClientUser(token: String): ClientUser? {
+       return null
+    }
+
+
 }

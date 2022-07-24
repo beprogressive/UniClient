@@ -1,8 +1,8 @@
 package beprogressive.uniclient.di
 
+import android.content.Context
 import beprogressive.common.data.AppDatabase
-import beprogressive.uniclient.data.UsersRepository
-import beprogressive.uniclient.data.UsersRepositoryImpl
+import beprogressive.uniclient.data.*
 import beprogressive.uniclient.data.local.LocalDataSource
 import beprogressive.uniclient.data.local.LocalDataSourceImpl
 import beprogressive.uniclient.data.remote.DataCollector
@@ -10,10 +10,12 @@ import beprogressive.uniclient.data.remote.RemoteDataCollector
 import beprogressive.uniclient.data.remote.RemoteDataSource
 import beprogressive.uniclient.data.remote.dailymotion.DailyMotionDataSource
 import beprogressive.uniclient.data.remote.github.GitHubDataSource
+import beprogressive.uniclient.dataStore
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -58,11 +60,14 @@ object AppModule {
     @LocalSourceData
     @Provides
     fun provideLocalDataSource(
+        @ApplicationContext context: Context,
         database: AppDatabase,
         ioDispatcher: CoroutineDispatcher
     ): LocalDataSource {
         return LocalDataSourceImpl(
-            database.userItemDao(), ioDispatcher
+            context.dataStore,
+            database.userItemDao(),
+            ioDispatcher
         )
     }
 
@@ -102,7 +107,6 @@ object AppModule {
 @Module
 @InstallIn(ViewModelComponent::class)
 object UsersRepositoryModule {
-//    @Singleton
     @Provides
     fun provideUsersRepository(
     @AppModule.CollectorData remoteDataCollector: DataCollector,
@@ -111,6 +115,45 @@ object UsersRepositoryModule {
         return UsersRepositoryImpl(remoteDataCollector, localDataSource)
     }
 }
+
+@Module
+@InstallIn(ViewModelComponent::class)
+object AuthRepositoryModule {
+    @Provides
+    fun provideAuthRepository(
+        @AppModule.CollectorData remoteDataCollector: DataCollector,
+        @AppModule.LocalSourceData localDataSource: LocalDataSource,
+    ): AuthRepository {
+        return AuthRepositoryImpl(remoteDataCollector, localDataSource)
+    }
+}
+
+@Module
+@InstallIn(ViewModelComponent::class)
+object MainRepositoryModule {
+    @Provides
+    fun provideMainRepository(
+        authRepository: AuthRepository,
+        @AppModule.CollectorData remoteDataCollector: DataCollector,
+        @AppModule.LocalSourceData localDataSource: LocalDataSource,
+    ): MainRepository {
+        return MainRepositoryImpl(authRepository, remoteDataCollector, localDataSource)
+    }
+}
+
+//@Module
+//@InstallIn(SingletonComponent::class)
+//class SettingsModule {
+//
+//    @Provides
+//    @Singleton
+//    fun provideSettings(@ApplicationContext context: Context) = MainRepoImpl(context.dataStore)
+//
+//    private val Context.dataStore: DataStore<ProtoSettings> by dataStore(
+//        fileName = "app_settings.proto",
+//        serializer = SettingsSerializer
+//    )
+//}
 
 //@Module
 //@InstallIn(SingletonComponent::class)

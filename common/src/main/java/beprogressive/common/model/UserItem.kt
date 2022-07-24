@@ -4,7 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.room.*
 
 @Entity(tableName = "Users", primaryKeys = ["userId", "apiKey"])
-open class UserItem(open val userId: String, open val name: String, open var imageUrl: String = "", open val apiKey: ApiKey) {
+open class UserItem(
+    open val userId: String,
+    open val name: String,
+    open var imageUrl: String = "",
+    open val apiKey: ApiKey
+) {
 
     var description = ""
 
@@ -13,6 +18,11 @@ open class UserItem(open val userId: String, open val name: String, open var ima
     enum class ApiKey {
         GitHub, DailyMotion
     }
+}
+
+fun String.toApiKey() = when (this) {
+    "GitHub" -> UserItem.ApiKey.GitHub
+    else -> UserItem.ApiKey.DailyMotion
 }
 
 @Dao
@@ -31,7 +41,12 @@ abstract class UserItemDao {
     }
 
     @Query("UPDATE Users SET imageUrl = :imageUrl, description = :description WHERE userId = :userId AND apiKey = :apiKey")
-    abstract fun update(userId: String, apiKey: UserItem.ApiKey, description: String, imageUrl: String)
+    abstract fun update(
+        userId: String,
+        apiKey: UserItem.ApiKey,
+        description: String,
+        imageUrl: String
+    )
 
     @Delete
     abstract fun delete(userItem: UserItem): Int

@@ -2,6 +2,7 @@ package beprogressive.uniclient.data.remote
 
 import beprogressive.common.model.UserItem
 import beprogressive.common.model.UserItemDao
+import beprogressive.uniclient.data.ClientUser
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
@@ -32,10 +33,25 @@ class RemoteDataCollector(
         }
     }
 
-    override suspend fun auth(type: UserItem.ApiKey, response: String) {
-        when (type) {
-            UserItem.ApiKey.GitHub -> gitHubDataSource.auth(response)
-            UserItem.ApiKey.DailyMotion -> dailyMotionDataSource.auth(response)
+    override suspend fun auth(type: UserItem.ApiKey, response: String): ClientUser? {
+        return when (type) {
+            UserItem.ApiKey.GitHub -> {
+                gitHubDataSource.auth(response).let {
+                    if (it != null)
+                        return getClientUser(type, it)
+                    else
+                        null
+                }
+            }
+
+            UserItem.ApiKey.DailyMotion -> return null
+        }
+    }
+
+    override fun getClientUser(type: UserItem.ApiKey, token: String): ClientUser? {
+        return when (type) {
+            UserItem.ApiKey.GitHub -> gitHubDataSource.getClientUser(token)
+            UserItem.ApiKey.DailyMotion -> dailyMotionDataSource.getClientUser(token)
         }
     }
 }

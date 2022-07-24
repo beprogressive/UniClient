@@ -11,3 +11,12 @@ data class GitHubAuthResponse(
     @SerializedName("token_type")
     val tokenType: String
 )
+
+data class GitHubClientUserResponse(
+    @SerializedName("access_token")
+    val accessToken: String,
+    @SerializedName("scope")
+    val scope: String,
+    @SerializedName("token_type")
+    val tokenType: String
+)

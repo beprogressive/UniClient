@@ -27,18 +27,6 @@ class UsersRepositoryImpl(
         return localDataSource.observeUser(userId)
     }
 
-    override suspend fun auth(response: Uri) {
-        withContext(ioDispatcher) {
-
-            val apiKey = if (response.path?.contains("github") == true)
-                UserItem.ApiKey.GitHub
-            else
-                UserItem.ApiKey.DailyMotion
-
-            remoteDataSource.auth(apiKey, response.query.toString())
-        }
-    }
-
     override suspend fun switchUserFavorite(userItem: UserItem) {
         withContext(ioDispatcher) {
             localDataSource.switchUserFavorite(userItem)
