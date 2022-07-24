@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/favorites_navigation"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/favoritesFragment">
+    <dialog
+        android:id="@+id/favoritesFragment"
+        android:name="beprogressive.favorites.ui.FavoritesFragment"
+        android:label="FavoritesFragment"
+        tools:layout="@layout/fragment_favorites"/>
+
+<!--    <deepLink app:uri="ghclient://openDetails"/>-->
+</navigation>

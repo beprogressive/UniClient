@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_nav"
+    app:startDestination="@id/usersFragment">
+
+    <include app:graph="@navigation/favorites_navigation" />
+
+    <fragment
+        android:id="@+id/usersFragment"
+        tools:layout="@layout/fragment_users"
+        android:name="beprogressive.uniclient.ui.UsersFragment"
+        android:label="UsersFragment" />
+
+    <dialog
+        android:id="@+id/bottomNavigation"
+        android:name="beprogressive.uniclient.ui.BottomNavigationDrawerFragment"
+        tools:layout="@layout/fragment_bottom_navigation_drawer" />
+
+    <dialog
+        android:id="@+id/authFragment"
+        android:name="beprogressive.uniclient.ui.AuthFragment"
+        tools:layout="@layout/fragment_auth"
+        android:label="AuthFragment" >
+    </dialog>
+
+    <dialog
+        android:id="@+id/detailsFragment"
+        android:name="beprogressive.uniclient.ui.DetailsFragment"
+        tools:layout="@layout/fragment_details"
+        android:label="DetailsFragment" >
+        <argument
+            android:name="userId"
+            app:argType="string" />
+    </dialog>
+
+    <action android:id="@+id/openBottomNavigation"
+        app:destination="@id/bottomNavigation" />
+    <action android:id="@+id/openAuth"
+        app:destination="@id/authFragment" />
+    <action android:id="@+id/openDetails"
+        app:destination="@id/detailsFragment"/>
+    <action android:id="@+id/openFavorites"
+        app:destination="@id/favorites_navigation" />
+</navigation>
