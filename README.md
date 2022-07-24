@@ -2,7 +2,7 @@
 
 Simple GitHub/else client.
 
-Technologies:
+### Technologies:
 * Multi module
 * MVVM
 * Room
