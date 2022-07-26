@@ -29,7 +29,7 @@ class AuthRepositoryImpl(
         }
     }
 
-    override suspend fun getSavedAccessToken(): Flow<String> {
-        return localDataSource.getSavedAccessToken()
+    override suspend fun getSavedClientUser(): Flow<ClientUser> {
+        return localDataSource.getSavedClientUser()
     }
 }

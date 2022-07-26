@@ -27,10 +27,10 @@ class MainViewModel @Inject constructor(private val repository: MainRepository, 
     val uiEvent: StateFlow<Event> = _uiEvent.asStateFlow()
 
     init {
-        getSavedAccessToken()
+        getSavedClientUser()
     }
 
-    private fun getSavedAccessToken() {
+    private fun getSavedClientUser() {
         viewModelScope.launch {
             repository.getSavedClientUser().collectLatest {
                 _clientUser.value = it

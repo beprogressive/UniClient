@@ -1,17 +1,14 @@
 package beprogressive.uniclient.ui
 
-import androidx.lifecycle.*
-import beprogressive.uniclient.data.UsersRepository
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import beprogressive.uniclient.data.remote.github.GitHubDataSource
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-@HiltViewModel
-class AuthViewModel @Inject constructor(private val repository: UsersRepository, state: SavedStateHandle) :
+class AuthViewModel :
     ViewModel() {
 
     data class LoginUiState(
@@ -23,9 +20,6 @@ class AuthViewModel @Inject constructor(private val repository: UsersRepository,
 
     private val _uiState = MutableStateFlow(LoginUiState())
     val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
-
-//    val user: LiveData<UserItem> = repository
-
 
     fun loginButtonClicked() {
         viewModelScope.launch {

@@ -47,14 +47,6 @@ class UserListAdapter(
             binding.isFavorite = userItem.isFavorite
             binding.userItemCallback = userItemCallback
             binding.executePendingBindings()
-
-//            Glide
-//                .with(binding.imageView.context)
-//                .load(userItem.imageUrl)
-//                .centerCrop()
-//                .apply(RequestOptions.circleCropTransform())
-//                .error(R.drawable.ic_action_name)
-//                .into(binding.imageView)
         }
     }
 }

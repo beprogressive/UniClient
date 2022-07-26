@@ -17,7 +17,5 @@ interface LocalDataSource {
 
     suspend fun saveClientUser(clientUser: ClientUser)
 
-    suspend fun getSavedAccessToken(): Flow<String>
-
     suspend fun getSavedClientUser(): Flow<ClientUser>
 }

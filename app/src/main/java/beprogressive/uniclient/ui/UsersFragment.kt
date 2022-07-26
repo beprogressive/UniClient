@@ -52,13 +52,6 @@ class UsersFragment : Fragment(), UserItemInterface {
     }
 
     private fun subscribeToViewModel() {
-//        viewModel.currentItem.observe(viewLifecycleOwner) {
-//            it?.let {
-//                viewModel.clearCurrentItem()
-//                openDetails(it.userId)
-//            }
-//        }
-
         viewModel.eventsFlow
             .onEach {
                 when (it) {

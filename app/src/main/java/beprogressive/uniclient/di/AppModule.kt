@@ -3,6 +3,8 @@ package beprogressive.uniclient.di
 import android.content.Context
 import beprogressive.common.data.AppDatabase
 import beprogressive.uniclient.data.*
+import beprogressive.uniclient.data.local.DataStorage
+import beprogressive.uniclient.data.local.DataStorageImpl
 import beprogressive.uniclient.data.local.LocalDataSource
 import beprogressive.uniclient.data.local.LocalDataSourceImpl
 import beprogressive.uniclient.data.remote.DataCollector
@@ -60,14 +62,24 @@ object AppModule {
     @LocalSourceData
     @Provides
     fun provideLocalDataSource(
-        @ApplicationContext context: Context,
         database: AppDatabase,
+        dataStorage: DataStorage,
         ioDispatcher: CoroutineDispatcher
     ): LocalDataSource {
         return LocalDataSourceImpl(
-            context.dataStore,
+            dataStorage,
             database.userItemDao(),
             ioDispatcher
+        )
+    }
+
+    @Singleton
+    @Provides
+    fun provideLocalDataStorage(
+        @ApplicationContext context: Context,
+    ): DataStorage {
+        return DataStorageImpl(
+            context.dataStore
         )
     }
 
@@ -109,8 +121,8 @@ object AppModule {
 object UsersRepositoryModule {
     @Provides
     fun provideUsersRepository(
-    @AppModule.CollectorData remoteDataCollector: DataCollector,
-    @AppModule.LocalSourceData localDataSource: LocalDataSource,
+        @AppModule.CollectorData remoteDataCollector: DataCollector,
+        @AppModule.LocalSourceData localDataSource: LocalDataSource,
     ): UsersRepository {
         return UsersRepositoryImpl(remoteDataCollector, localDataSource)
     }

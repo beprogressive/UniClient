@@ -6,7 +6,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface MainRepository {
     suspend fun getClientUser(apiKey: UserItem.ApiKey, token: String)
-    suspend fun getSavedAccessToken(): Flow<String>
     suspend fun getSavedClientUser(): Flow<ClientUser?>
     suspend fun auth(response: Uri)
 }
