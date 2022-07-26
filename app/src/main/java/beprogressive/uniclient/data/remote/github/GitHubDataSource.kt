@@ -95,7 +95,8 @@ object GitHubDataSource : RemoteDataSource {
     override fun getClientUser(token: String): ClientUser? {
         val response = retrofitService.getClientUser("token $token").execute()
         response.body()?.let {
-            return ClientUser.setUser(it.login, token, UserItem.ApiKey.GitHub)
+            log("onResponse user.avatarUrl: ${it.avatarUrl}")
+            return ClientUser.setUser(it.login, token, it.avatarUrl, UserItem.ApiKey.GitHub)
         }
         return null
     }

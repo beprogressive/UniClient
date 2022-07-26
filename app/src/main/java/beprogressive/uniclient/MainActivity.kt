@@ -11,7 +11,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import beprogressive.common.createColoredDialog
+import beprogressive.common.markWithAccentColor
 import beprogressive.common.model.UserItem
+import beprogressive.common.spannedText
 import beprogressive.common.ui.UserItemClickInterface
 import beprogressive.uniclient.ui.FabInterface
 import beprogressive.uniclient.ui.MainViewModel
@@ -61,6 +64,7 @@ class MainActivity : AppCompatActivity(), FabInterface, UserItemClickInterface {
                 viewModel.uiEvent.collect { uiEvent ->
                     when (uiEvent) {
                         is MainViewModel.Event.ShowAuth -> showAuth()
+                        is MainViewModel.Event.LogOut -> logOut(uiEvent.profileName)
                         else -> {}
                     }
                     viewModel.uiStateDone()
@@ -72,6 +76,13 @@ class MainActivity : AppCompatActivity(), FabInterface, UserItemClickInterface {
     private fun showAuth() {
         val action = MainNavDirections.openAuth()
         navController.navigate(action)
+    }
+
+    private fun logOut(profileName: String) {
+        val message = spannedText("Do you want to logout account " + markWithAccentColor(profileName) + "?")
+        createColoredDialog(message = message) {
+            viewModel.logOut()
+        }.show()
     }
 
     private fun showBottomNavigation() {
