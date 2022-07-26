@@ -18,4 +18,6 @@ interface LocalDataSource {
     suspend fun saveClientUser(clientUser: ClientUser)
 
     suspend fun getSavedClientUser(): Flow<ClientUser>
+
+    suspend fun clearSavedClientUser()
 }

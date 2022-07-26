@@ -9,4 +9,6 @@ interface DataStorage {
     suspend fun saveAccessToken(token: String)
 
     suspend fun saveClientUser(clientUser: ClientUser)
+
+    suspend fun clearClientUser()
 }

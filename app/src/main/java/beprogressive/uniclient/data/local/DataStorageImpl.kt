@@ -7,9 +7,14 @@ import com.gmail.beprogressive.it.uniclient.ProtoSettings
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.transform
 
-class DataStorageImpl(private val settings: DataStore<ProtoSettings>): DataStorage {
+class DataStorageImpl(private val settings: DataStore<ProtoSettings>) : DataStorage {
     override val savedClientUser: Flow<ClientUser> = settings.data.transform { flowCollector ->
-        val clientUser = ClientUser.setUser(flowCollector.userName, flowCollector.accessToken, flowCollector.apiType.toApiKey())
+        val clientUser = ClientUser.setUser(
+            flowCollector.userName,
+            flowCollector.accessToken,
+            flowCollector.userImage,
+            flowCollector.apiType.toApiKey()
+        )
         emit(clientUser)
     }
 
@@ -24,7 +29,19 @@ class DataStorageImpl(private val settings: DataStore<ProtoSettings>): DataStora
             it.toBuilder()
                 .setAccessToken(clientUser.accessToken)
                 .setUserName(clientUser.userName)
+                .setUserImage(clientUser.userImage)
                 .setApiType(clientUser.apiType.name)
+                .build()
+        }
+    }
+
+    override suspend fun clearClientUser() {
+        settings.updateData {
+            it.toBuilder()
+                .clearUserName()
+                .clearAccessToken()
+                .clearUserImage()
+                .clearApiType()
                 .build()
         }
     }

@@ -19,4 +19,8 @@ class MainRepositoryImpl(
     override suspend fun auth(response: Uri) {
         authRepository.auth(response)
     }
+
+    override suspend fun logOut() {
+        localDataSource.clearSavedClientUser()
+    }
 }

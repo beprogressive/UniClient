@@ -21,6 +21,7 @@ class MainViewModel @Inject constructor(private val repository: MainRepository, 
         data class Error(val text: String) : Event()
         data class Message(val text: String) : Event()
         object ShowAuth : Event()
+        data class LogOut(val profileName: String) : Event()
     }
 
     private val _uiEvent: MutableStateFlow<Event> = MutableStateFlow(Event.Idle)
@@ -53,6 +54,18 @@ class MainViewModel @Inject constructor(private val repository: MainRepository, 
     fun handleAuth(response: Uri) {
         viewModelScope.launch {
             repository.auth(response)
+        }
+    }
+
+    fun onLogOutClick(profileName: String) {
+        _uiEvent.update {
+            Event.LogOut(profileName)
+        }
+    }
+
+    fun logOut() {
+        viewModelScope.launch {
+            repository.logOut()
         }
     }
 }

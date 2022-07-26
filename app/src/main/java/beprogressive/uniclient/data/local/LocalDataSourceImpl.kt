@@ -36,4 +36,8 @@ class LocalDataSourceImpl internal constructor(
     }
 
     override suspend fun getSavedClientUser() = dataStorage.savedClientUser
+
+    override suspend fun clearSavedClientUser() {
+        dataStorage.clearClientUser()
+    }
 }

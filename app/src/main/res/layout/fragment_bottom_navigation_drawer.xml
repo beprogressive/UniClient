@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -19,32 +20,75 @@
         app:behavior_hideable="true"
         app:layout_behavior="@string/bottom_sheet_behavior">
 
-        <LinearLayout
-            android:id="@+id/nav_auth"
+        <TextView
+            style="@android:style/TextAppearance.Material.Title"
             android:layout_width="match_parent"
             android:layout_height="72dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:gravity="center_vertical"
+            android:background="?android:attr/selectableItemBackground"
+            android:text="Auth"
+            bind:authVisibility="@{viewModel.clientUser}"
+            android:onClick="@{(view) -> viewModel.showAuth()}"
+            android:textColor="@color/colorSubText"
+            android:textSize="16sp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/nav_auth"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:background="?android:attr/selectableItemBackground"
             android:clickable="true"
             android:focusable="true"
             android:gravity="center_vertical"
+            bind:profileVisibility="@{viewModel.clientUser}"
             android:onClick="@{(view) -> viewModel.showAuth()}"
             android:orientation="vertical"
-            android:paddingLeft="22dp"
-            android:paddingTop="6dp"
-            android:paddingRight="22dp"
-            android:paddingBottom="6dp"
             app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/image"
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:scaleType="centerCrop"
+                android:adjustViewBounds="true"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginStart="10dp"
+                bind:src="@{viewModel.clientUser.userImage}"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"/>
 
             <TextView
                 style="@android:style/TextAppearance.Material.Title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:drawablePadding="14dp"
-                android:text='@{viewModel.clientUser.userName != null ? viewModel.clientUser.userName : "Auth"}'
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:text='@{viewModel.clientUser.userName}'
                 android:textColor="@color/colorSubText"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                app:layout_constraintTop_toTopOf="@+id/image"
+                app:layout_constraintBottom_toBottomOf="@+id/image"
+                app:layout_constraintStart_toEndOf="@+id/image"/>
 
-        </LinearLayout>
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:src="@drawable/ic_close"
+                android:onClick="@{(view) -> viewModel.onLogOutClick(viewModel.clientUser.userName)}"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
